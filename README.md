@@ -6,6 +6,7 @@ ada-2023-project-yamal created by GitHub Classroom
 **Abstract**
 
 150 words describing the project idea and motivation
+Our goal is to investigate the different factors influencing a movie's success. Beyond this wide subject of investigation, we wish to focus our analysis on certain topics to provide a good frame to our work and provide an interesting plot for our story to tell.
 
 **Research questions**
 
