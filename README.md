@@ -16,7 +16,7 @@ Our main question is:
 
 - What factors influence a movie’s success?
 
-We will pslit it into several sub-questions to focus specific topics to tell our story:
+We will pslit it into several sub-questions to focus specific topics to tell our story: (example of subquestion, we have to choose best ones)
 
 1) How does the film release country influence its success?
 2) Relationship between the casting of a movie and its success (Actors, age, gender, etc …)
