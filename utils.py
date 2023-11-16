@@ -6,9 +6,14 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-# To get an idea of the % of NaNs in each column
+
 def plot_nan(df, title):
-    # Calculate the percentage of NaN values in each column
+    """
+    Parameters:
+    - df: Pandas dataframe
+    - title: string
+    Calculate the percentage of NaN values in each column of the dataframe (df) to get an idea of how much data is missing
+    """
     nan_values = df.isnull().mean() * 100
     # Create a bar plot
     nan_values.plot(kind='bar', figsize=(12,6))
@@ -18,6 +23,15 @@ def plot_nan(df, title):
     plt.show()
     
 def query_wikidata():
+    """
+    Args:
+    - None
+    Returns:
+    - JSON data with IMDb ID and Freebase ID from Wikidata
+    
+    1. Define the URL for the Wikidata SPARQL endpoint
+    2. Query items with IMDb ID and Freebase ID
+    """
     url = 'https://query.wikidata.org/sparql'
     query = """
     SELECT ?item ?imdb ?freebase WHERE {
@@ -30,6 +44,13 @@ def query_wikidata():
     return data
 
 def json_to_df(data):
+    """
+    Convert the JSON data to a Pandas Dataframe
+    Args:
+    - data (JSON data from Wikidata)
+    Returns:
+    - A Pandas Dataframe containing the mapping between each films' Freebase ID and IMDb ID, this is done in order to join the IMDb dataset and our CMU Movies Summary dataset
+     """
     imdb_ids = []
     freebase_ids = []
     for item in data['results']['bindings']:
@@ -46,7 +67,7 @@ def structural_analysis(df):
     2. Print the count of each data type in the DataFrame.
     3. Prints th number of different values per numerical feature
 
-    Parameters:
+    Args:
     - df: Pandas DataFrame
 
     Returns:
@@ -72,6 +93,15 @@ def is_missing(val):
     return pd.isna(val) or val == [] or val == 0
 
 def plot_missing_values_percentage(df):
+    """
+    Plots the percentage of missing values in each column of the DataFrame.
+
+    Args:
+    - df : Pandas Dataframe
+
+    Returns:
+    - None
+    """
     # Apply the custom missing value checker to the DataFrame
     missing_values = df.map(is_missing)
 
@@ -86,10 +116,28 @@ def plot_missing_values_percentage(df):
     )
 
 def plot_data_set(df):
+    """
+    Plots each column in the DataFrame.
+
+    Args:
+    - df : Pandas Dataframe
+
+    Returns:
+    - None
+    """
     df.plot(lw=0, marker=".", subplots=True, layout=(-1, 4),
           figsize=(15, 30), markersize=1);
 
 def pair_plot_continuous_features(df):
+    """
+    Creates a pair plot of the continuous numerical features in the DataFrame.
+    
+    Args:
+    - df : Pandas Dataframe
+
+    Returns:
+    - None
+    """
     # Creates mask to identify numerical features with more or less than 25 unique features
     cols_continuous = df.select_dtypes(include="number").nunique() >= 25
     # Create a new dataframe which only contains the continuous features
@@ -99,6 +147,19 @@ def pair_plot_continuous_features(df):
 
 
 def plot_top_20_most_popular(df,column_name, xlabel, ylabel, title):
+    """
+    Plots the 20 most common values.
+
+    Args:
+    - df : Pandas Dataframe
+    - column_name : string
+    - xlabel : string
+    - ylabel : string
+    - title : string
+
+    Returns:
+    - None
+    """
     df_exploded = df.explode(column_name)
     values = df_exploded[column_name].value_counts()
     top20_values = values.sort_values(ascending = False)[:20]
@@ -111,6 +172,16 @@ def plot_top_20_most_popular(df,column_name, xlabel, ylabel, title):
 
 
 def plot_histograms(df, column_names):
+    """
+    plots a histogram for each specified column in the DataFrame.
+
+    Args:
+    - df : Pandas Dataframe
+    - column_names : list of columns to plot
+
+    Returns:
+    - None
+    """
     num_rows = len(column_names) // 2  # Adjust the number of rows as needed
     num_cols = 2  # Adjust the number of columns as needed
 
@@ -137,10 +208,10 @@ def transform_row(row):
     Transforms a JSON string into a list of its values.
 
     Args:
-    row (str): A JSON string representing a dictionary.
+    - row (str): A JSON string representing a dictionary.
 
     Returns:
-    list: A list of values extracted from the JSON string.
+    - list: A list of values extracted from the JSON string.
     """
     # Load the JSON string into a Python dictionary
     # and then extract its values into a list.
@@ -151,6 +222,15 @@ def transform_row(row):
 
 
 def safe_literal_eval(x):
+    """
+    Tries to evaluate a string x as a python expression.
+
+    Args:
+    - x (str): The string to evaluate.
+
+    Returns:
+    - list: The evaluated result as a list. If the evaluation fails, returns an empty list.
+    """
     try:
         return ast.literal_eval(x)
     except ValueError:
@@ -158,6 +238,15 @@ def safe_literal_eval(x):
 
 
 def get_names(x):
+    """
+    Extracts the 'name' value.
+
+    Args:
+    - x (list): The list of dictionaries to process.
+
+    Returns:
+    - list: A list of 'name' values. If the extraction fails, returns an empty list.
+    """
     try:
         result = []
         for d in x:
