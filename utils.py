@@ -1,5 +1,7 @@
 import requests
+import ast
 import numpy as np
+import json
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -65,11 +67,23 @@ def structural_analysis(df):
     # Plot information with y-axis in log-scale
     unique_values.plot.bar(logy=True, figsize=(15, 4), title="Unique values per feature");
 
-def plot_missing_values_percenatage(df):
-    df.isna().mean().sort_values().plot(
-    kind="bar", figsize=(15, 4),
-    title="Percentage of missing values per feature",
-    ylabel="Ratio of missing values per feature");
+def is_missing(val):
+    """Check if the value is NaN, an empty list, or zero."""
+    return pd.isna(val) or val == [] or val == 0
+
+def plot_missing_values_percentage(df):
+    # Apply the custom missing value checker to the DataFrame
+    missing_values = df.map(is_missing)
+
+    # Calculate the ratio of missing values
+    missing_ratio = missing_values.mean().sort_values()
+
+    # Plot the results
+    missing_ratio.plot(
+        kind="bar", figsize=(15, 4),
+        title="Percentage of missing values per feature",
+        ylabel="Ratio of missing values per feature"
+    )
 
 def plot_data_set(df):
     df.plot(lw=0, marker=".", subplots=True, layout=(-1, 4),
@@ -117,25 +131,41 @@ def plot_histograms(df, column_names):
     plt.tight_layout()
     plt.show()
 
-def split_date(df, dates):
+
+def transform_row(row):
     """
-    Define a function to split the date into year and month
-    Input: df to modify and its column dates
+    Transforms a JSON string into a list of its values.
+
+    Args:
+    row (str): A JSON string representing a dictionary.
+
+    Returns:
+    list: A list of values extracted from the JSON string.
     """
-    movie_release_year = []
-    movie_release_month = []
-    
-    for release_date in dates:
-        if '-' in str(release_date):
-            splitted_date = release_date.split('-')
-            movie_release_year.append(splitted_date[0])
-            movie_release_month.append(splitted_date[1])
-        else :
-            movie_release_year.append(str(release_date)[:4])
-            movie_release_month.append(None)
-    df['Movie_release_year'] = movie_release_year
-    df['Movie_release_month'] = movie_release_month
-    df.drop('release_date', axis = 1, inplace = True)
+    # Load the JSON string into a Python dictionary
+    # and then extract its values into a list.
+    res = list(json.loads(row).values())
+
+    # Return the list of values.
+    return res
+
+
+def safe_literal_eval(x):
+    try:
+        return ast.literal_eval(x)
+    except ValueError:
+        return []
+
+
+def get_names(x):
+    try:
+        result = []
+        for d in x:
+            result.append(d['name'])
+        return result
+    except TypeError:
+        return []
+
 
     
 
