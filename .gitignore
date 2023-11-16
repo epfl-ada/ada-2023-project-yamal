@@ -1,8 +1,0 @@
-base_data_set
-external_data_sets
-Data_set/character.metadata.tsv
-Data_set/movie.metadata.tsv
-Data_set/name.clusters.txt
-Data_set/plot_summaries.txt
-Data_set/README.txt
-Data_set/tvtropes.clusters.txt
