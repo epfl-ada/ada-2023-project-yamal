@@ -1,5 +1,6 @@
 import requests
 import ast
+from datetime import datetime
 import numpy as np
 import json
 import matplotlib.pyplot as plt
@@ -255,3 +256,17 @@ def get_names(x):
         return result
     except TypeError:
         return []
+
+def determine_date_format(date_str):
+    try:
+        # Try to parse the date in yyyy-mm-dd format
+        datetime.strptime(date_str, '%Y-%m-%d')
+        return 'yyyy-mm-dd'
+    except ValueError:
+        try:
+            # If the first attempt fails, try to parse it in yyyy format
+            datetime.strptime(date_str, '%Y')
+            return 'yyyy'
+        except ValueError:
+            # If both attempts fail, the format is neither 'yyyy-mm-dd' nor 'yyyy'
+            return 'unknown'
