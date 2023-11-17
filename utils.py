@@ -1,7 +1,6 @@
 import requests
 import ast
 from datetime import datetime
-import numpy as np
 import json
 import matplotlib.pyplot as plt
 import pandas as pd
