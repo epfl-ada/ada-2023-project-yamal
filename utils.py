@@ -16,12 +16,14 @@ def plot_nan(df, title):
     """
     nan_values = df.isnull().mean() * 100
     # Create a bar plot
-    nan_values.plot(kind='bar', figsize=(12,6))
+    nan_values.plot(kind='bar', figsize=(12, 6))
     plt.title(title)
     plt.ylabel('Percentage missing values')
     plt.xlabel('Features')
+    plt.grid(False)
     plt.show()
-    
+
+
 def query_wikidata():
     """
     Args:
@@ -39,9 +41,10 @@ def query_wikidata():
       ?item wdt:P646 ?freebase.
     }
     """
-    r = requests.get(url, params = {'format': 'json', 'query': query})
+    r = requests.get(url, params={'format': 'json', 'query': query})
     data = r.json()
     return data
+
 
 def json_to_df(data):
     """
@@ -73,24 +76,18 @@ def structural_analysis(df):
     Returns:
     - None
     """
-    # Task 1: Print the shape of the DataFrame
-    print(f"DataFrame Shape: {df.shape}")
-
-    # Task 2: Print the count of each data type in the DataFrame
-    print("\nData Types Counts:")
-    print(df.dtypes.value_counts())
-
-    # Task 3: Plot the number of different values for numerical features.
-
     # For each numerical feature compute number of unique entries
     unique_values = df.select_dtypes(include="number").nunique().sort_values()
 
     # Plot information with y-axis in log-scale
-    unique_values.plot.bar(logy=True, figsize=(15, 4), title="Unique values per feature");
+    unique_values.plot.bar(logy=True, figsize=(15, 4), title="Unique values per feature")
+    plt.grid(False)
+
 
 def is_missing(val):
     """Check if the value is NaN, an empty list, or zero."""
     return pd.isna(val) or val == [] or val == 0
+
 
 def plot_missing_values_percentage(df):
     """
@@ -115,6 +112,9 @@ def plot_missing_values_percentage(df):
         ylabel="Ratio of missing values per feature"
     )
 
+    plt.grid(False)
+
+
 def plot_data_set(df):
     """
     Plots each column in the DataFrame.
@@ -125,8 +125,8 @@ def plot_data_set(df):
     Returns:
     - None
     """
-    df.plot(lw=0, marker=".", subplots=True, layout=(-1, 4),
-          figsize=(15, 30), markersize=1);
+    df.plot(lw=0, marker=".", subplots=True, layout=(-1, 4), figsize=(15, 30), markersize=1)
+
 
 def pair_plot_continuous_features(df):
     """
@@ -142,11 +142,10 @@ def pair_plot_continuous_features(df):
     cols_continuous = df.select_dtypes(include="number").nunique() >= 25
     # Create a new dataframe which only contains the continuous features
     df_continuous = df[cols_continuous[cols_continuous].index]
-    df_continuous.shape
-    sns.pairplot(df_continuous, height=1.5, plot_kws={"s": 2, "alpha": 0.2});
+    sns.pairplot(df_continuous, height=1.5, plot_kws={"s": 2, "alpha": 0.2})
 
 
-def plot_top_20_most_popular(df,column_name, xlabel, ylabel, title):
+def plot_top_20_most_popular(df, column_name, xlabel, ylabel, title):
     """
     Plots the 20 most common values.
 
@@ -162,13 +161,14 @@ def plot_top_20_most_popular(df,column_name, xlabel, ylabel, title):
     """
     df_exploded = df.explode(column_name)
     values = df_exploded[column_name].value_counts()
-    top20_values = values.sort_values(ascending = False)[:20]
-    plt.figure(figsize=(20,6))
+    top20_values = values.sort_values(ascending=False)[:20]
+    plt.figure(figsize=(20, 6))
     top20_values.plot.bar()
     plt.title(title)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
-    
+
+    plt.grid(False)
 
 
 def plot_histograms(df, column_names):
@@ -197,6 +197,7 @@ def plot_histograms(df, column_names):
         axes[i].set_title(column)
         axes[i].set_xlabel(column)
         axes[i].set_ylabel('Frequency')
+        axes[i].grid(False)
 
     # Adjust layout and show the plot
     plt.tight_layout()
@@ -254,9 +255,3 @@ def get_names(x):
         return result
     except TypeError:
         return []
-
-
-    
-
-
-
