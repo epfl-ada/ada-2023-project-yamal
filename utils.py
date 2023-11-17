@@ -65,10 +65,7 @@ def json_to_df(data):
 
 def structural_analysis(df):
     """
-    Analyze a DataFrame and perform the following tasks:
-    1. Print the shape of the DataFrame.
-    2. Print the count of each data type in the DataFrame.
-    3. Prints th number of different values per numerical feature
+    Prints th number of different values per numerical feature
 
     Args:
     - df: Pandas DataFrame
@@ -80,8 +77,9 @@ def structural_analysis(df):
     unique_values = df.select_dtypes(include="number").nunique().sort_values()
 
     # Plot information with y-axis in log-scale
-    unique_values.plot.bar(logy=True, figsize=(15, 4), title="Unique values per feature")
+    unique_values.plot.bar(figsize=(4, 4), title="Unique values per feature")
     plt.grid(False)
+    plt.xticks(rotation = 0)
 
 
 def is_missing(val):
