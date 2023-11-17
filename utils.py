@@ -77,7 +77,7 @@ def structural_analysis(df):
     unique_values = df.select_dtypes(include="number").nunique().sort_values()
 
     # Plot information with y-axis in log-scale
-    unique_values.plot.bar(figsize=(4, 4), title="Unique values per feature")
+    unique_values.plot.bar(figsize=(10, 6), title="Unique values per feature")
     plt.grid(False)
     plt.xticks(rotation = 0)
 
