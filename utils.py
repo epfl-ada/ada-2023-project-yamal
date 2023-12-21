@@ -327,7 +327,7 @@ def adjust_for_inflation(row, base_year_cpi):
 
 
  
- def sentiment_evalution(plot):
+def sentiment_evalution(plot):
     """
     Function that aims to analyse plot sentiments by examining each sentence of the plot.
     
@@ -361,7 +361,7 @@ def adjust_for_inflation(row, base_year_cpi):
         
     plot_class = classify_plot(sentence_class)
     
-return pd.Series([sentence_score, plot_class])
+    return pd.Series([sentence_score, plot_class])
 
 
 def classify_plot(plot_sentence_class):
@@ -394,4 +394,4 @@ def classify_plot(plot_sentence_class):
     else:
         plot_class = np.nan
         
-return plot_class
+    return plot_class
