@@ -30,7 +30,7 @@ def query_wikidata():
     - None
     Returns:
     - JSON data with IMDb ID and Freebase ID from Wikidata
-    
+
     1. Define the URL for the Wikidata SPARQL endpoint
     2. Query items with IMDb ID and Freebase ID
     """
@@ -79,7 +79,7 @@ def structural_analysis(df):
     # Plot information with y-axis in log-scale
     unique_values.plot.bar(figsize=(10, 6), title="Unique values per feature")
     plt.grid(False)
-    plt.xticks(rotation = 0)
+    plt.xticks(rotation=0)
 
 
 def is_missing(val):
@@ -129,7 +129,7 @@ def plot_data_set(df):
 def pair_plot_continuous_features(df):
     """
     Creates a pair plot of the continuous numerical features in the DataFrame.
-    
+
     Args:
     - df : Pandas Dataframe
 
@@ -254,6 +254,7 @@ def get_names(x):
     except TypeError:
         return []
 
+
 def determine_date_format(date_str):
     try:
         # Try to parse the date in yyyy-mm-dd format
@@ -267,3 +268,59 @@ def determine_date_format(date_str):
         except ValueError:
             # If both attempts fail, the format is neither 'yyyy-mm-dd' nor 'yyyy'
             return 'unknown'
+
+
+# Helper method that takes as argument actor_names, i.e. the list of the actors that played in a film and returns True
+# if and only if one of them has been nominated to the oscars.
+def actor_names_in_oscar_actors(actor_names, oscar_actors):
+    """
+    Returns True if and only if one of the actors in actors_name has been nominated to the oscars.
+
+    Args:
+    - actor_names : The list of the actor names that played in a given movie.
+    - oscar_actors : The list of the oscar nominated actors.
+    """
+    for actor_name in actor_names:
+        if actor_name in oscar_actors:
+            return True
+    return False
+
+    # Helper method that takes as argument actor_names, i.e the list of the actors that played in a film and returns
+    # the number of oscar nominated actors that played in that movie.
+
+
+def number_of_oscar_actors(actor_names, oscae_actors):
+    count = 0
+    for actor_name in actor_names:
+        if actor_name in oscae_actors:
+            count += 1
+    return count
+
+
+# Function to adjust for inflation
+def adjust_for_inflation(row, base_year_cpi):
+    """
+    Adjusts the box office revenue and budget of a movie for inflation.
+
+    This function takes a row from a DataFrame (representing a movie) and adjusts its
+    financial figures (box office revenue and budget) based on the annual CPI (Consumer Price Index)
+    to reflect their value in terms of the base year's CPI.
+
+    Args:
+        row (pd.Series): A row from a pandas DataFrame. Each row represents a movie and
+                        contains data including the annual CPI for its release year,
+                        its box office revenue, and its budget.
+        base_year_cpi (float): The CPI of the base year against which the adjustment is made.
+                                This is the CPI value of the most recent year in the dataset.
+
+    Returns:
+        pd.Series: The modified row with adjusted financial figures.
+    """
+
+    inflation_factor = base_year_cpi / row['annual_cpi']
+
+    if pd.notna(row['Movie_box_office_revenue']):
+        row['Movie_box_office_revenue'] = row['Movie_box_office_revenue'] * inflation_factor
+    if pd.notna(row['budget']):
+        row['budget'] = row['budget'] * inflation_factor
+    return row
