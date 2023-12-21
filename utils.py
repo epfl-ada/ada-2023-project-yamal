@@ -324,3 +324,74 @@ def adjust_for_inflation(row, base_year_cpi):
     if pd.notna(row['budget']):
         row['budget'] = row['budget'] * inflation_factor
     return row
+
+
+ 
+ def sentiment_evalution(plot):
+    """
+    Function that aims to analyse plot sentiments by examining each sentence of the plot.
+    
+    Input:  
+    - plot: list of the tokens of a movie plot
+    
+    Output: 
+    - sentence_score: list containing the polarity score of each plot sentence 
+    - plot_class: string value containing the plot class (either 'Positive', 'Negative', 'Neutral' or nan)
+
+    """
+
+    sentence_class, sentence_score = [], []
+
+    # Loop through all the sentences
+    for sentence in plot: 
+
+        sentence_score.append(analyzer.polarity_scores(sentence)['compound'])
+
+        # Positive sentence
+        if sentence_score[-1]>= 0.05:
+            sentence_class.append(1)
+
+        # Negative sentence
+        elif sentence_score[-1] <= -0.05:
+            sentence_class.append(-1)
+        
+        # Neutral sentence
+        else:
+            sentence_class.append(0)
+        
+    plot_class = classify_plot(sentence_class)
+    
+return pd.Series([sentence_score, plot_class])
+
+
+def classify_plot(plot_sentence_class):
+    """
+    Function that aims to classify the plot of a movie into a sentiment class. If 50% of the plot sentences
+    belongs to the same sentiment class, this sentiment class is assigned as class of the plot.
+    
+    Input:  
+    - plot_sentence_class: list of sentiment class of the plot sentences
+    
+    Output:
+    - plot_class: string value containing the plot class (either 'Positive', 'Negative' or 'Neutral')
+
+    """
+
+    classes = np.array(plot_sentence_class)
+    
+    # Positive plot
+    if sum(classes==1)/classes.size>=0.5:
+        plot_class = 'Positive'
+
+    # Negative plot
+    elif sum(classes==-1)/classes.size>0.5:
+        plot_class = 'Negative'
+
+    # Neutral plot
+    elif sum(classes==0)/classes.size>0.5:
+        plot_class = 'Neutral'
+
+    else:
+        plot_class = np.nan
+        
+return plot_class
