@@ -63,6 +63,18 @@ Before proceeding with our analysis, we need to focus on one essential point: in
 - Week 13: Perform final analysis and write the textual description of the work and its results
 - Week 14: Finalise the report and discussion, clean the code. Submit.
 
-## Organization within the team
+## Organization within the team - forecast for Milestone 3
 
 The team organisation will be set up as follows: each team member is assigned one or two sub-questions. To avoid team members having to wait for other people to do their work, each member will work on their own sub-question(s). Recurrent meetings will help us stay on track with our research question and coordinate our activities to make links within sub-questions / individual analysis if needed.
+
+## Final contributions to Milestone 3
+
+- Youssef Izellalen: Analysis of subquestion 2), presentation of results on the website
+
+- Anas Hakim: Analysis of subquestion 1), presentation of results on the website
+
+- Mathieu Ruch: Analysis of subquestion 3), presentation of results on the website, readme update, setting the website
+
+- Amine Belghmi: Analysis of subquestion 4), presentation of results on the website
+
+- Luc Harrison: Analysis of subquestion 5) & 6), presentation of results on the website
