@@ -439,10 +439,26 @@ def perform_matching(control_study, treated_study):
 
 
 def categorize_revenue(revenue, threshold):
+    """
+    Is used on each row of a dataframe to identify the film is a blockbuster or non-blockbuster.
+    Parameters:
+    - threshold: the threshold above which the film is a blockbuster
+    - revenue: the value of the dataframe column corresponding to revenue
+    Returns :
+    - str: the new value describing the level of revenue of the film
+    """
     return 'blockbuster' if revenue >= threshold else 'non-blockbuster'
 
 
 def get_unmatched_blockbuster(df, revenue_threshold):
+    """
+    Is used to output a dataframe with an equal amount of high and low revenue films but without matching on genres.
+    Parameters:
+    - df: the movies dataframe that we extract the films from
+    - revenue_threshold: the threshold used to decide whether a film is high budget or not
+    Returns :
+    - unbalanced_data: dataframe containing the same amount of blockbuster/non-blockbuster films without being matched on genres
+    """
     blockbuster_movies = df.copy().dropna(subset=['Movie_box_office_revenue', 'Movie_runtime'])
     blockbuster_movies['revenue_category'] = blockbuster_movies['Movie_box_office_revenue'].apply(lambda x:categorize_revenue(x,revenue_threshold))
 
@@ -466,6 +482,14 @@ def get_unmatched_blockbuster(df, revenue_threshold):
 
 
 def get_balanced_blockbuster(df, threshold):
+    """
+    Is used to output a dataframe with an equal amount of high and low revenue films with exact matching on genres.
+    Parameters:
+    - df: the movies dataframe that we extract the films from
+    - revenue_threshold: the threshold used to decide whether a film is high revenue or not
+    Returns :
+    - unbalanced_data: dataframe containing the same amount of blockbuster/non-blockbuster films using exact matching on the genres
+    """
     blockbuster_movies_ = df.copy().dropna(subset=['Movie_box_office_revenue', 'Movie_runtime'])
     blockbuster_movies_['revenue_category'] = blockbuster_movies_['Movie_box_office_revenue'].apply(lambda x: categorize_revenue(x, threshold))
     exploded_blockbuster_ = blockbuster_movies_.explode('genres')
@@ -492,9 +516,25 @@ def get_balanced_blockbuster(df, threshold):
     return balanced_data_
 
 def categorize_budget(budget, threshold):
+    """
+    Is used on each row of a dataframe to identify the film is a high or low budget film.
+    Parameters:
+    - threshold: the threshold above which the film is considered high budget
+    - budget: the value of the dataframe column corresponding to budget
+    Returns :
+    - str: the new value describing if the film is high budget or not
+    """
     return 'low' if budget < threshold else 'high'
 
 def get_matched_buget(df, threshold):
+    """
+    Is used to output a dataframe with an equal amount of high and low budget films with exact matching on genres.
+    Parameters:
+    - df: the movies dataframe that we extract the films from
+    - revenue_threshold: the threshold used to decide whether a film is high budget or not
+    Returns :
+    - unbalanced_data: dataframe containing the same amount of high/low budget films using exact matching on the genres
+    """
     movies_without_na = df.copy().dropna(subset=['Net profit'])
     movies_without_na['budget_category'] = movies_without_na['budget'].apply(lambda x: categorize_budget(x, threshold))
     exploded_movies = movies_without_na.explode('genres')
