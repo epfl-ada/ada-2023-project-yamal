@@ -73,7 +73,7 @@ The team organisation will be set up as follows: each team member is assigned on
   
 - Youssef Izellalen: Analysis of subquestion 2), presentation of results on the website
 
-- Mathieu Ruch: Analysis of subquestion 3), presentation of results on the website, readme update, setting the website
+- Mathieu Ruch: Analysis of subquestion 3), presentation of results on the website, readme update, setting up the website
 
 - Amine Belghmi: Analysis of subquestion 4), presentation of results on the website
 
