@@ -442,8 +442,8 @@ def categorize_revenue(revenue, threshold):
     return 'blockbuster' if revenue >= threshold else 'non-blockbuster'
 
 
-def get_unmatched_blockbuster(movies, revenue_threshold):
-    blockbuster_movies = movies.copy().dropna(subset=['Movie_box_office_revenue', 'Movie_runtime'])
+def get_unmatched_blockbuster(df, revenue_threshold):
+    blockbuster_movies = df.copy().dropna(subset=['Movie_box_office_revenue', 'Movie_runtime'])
     blockbuster_movies['revenue_category'] = blockbuster_movies['Movie_box_office_revenue'].apply(lambda x:categorize_revenue(x,revenue_threshold))
 
     # Separate into blockbuster and non-blockbuster groups
@@ -466,8 +466,8 @@ def get_unmatched_blockbuster(movies, revenue_threshold):
 
 
 def get_balanced_blockbuster(df, threshold):
-    blockbuster_movies_ = movies.copy().dropna(subset=['Movie_box_office_revenue', 'Movie_runtime'])
-    blockbuster_movies_['revenue_category'] = blockbuster_movies_['Movie_box_office_revenue'].apply(lambda x: categorize_revenue(x, revenue_threshold))
+    blockbuster_movies_ = df.copy().dropna(subset=['Movie_box_office_revenue', 'Movie_runtime'])
+    blockbuster_movies_['revenue_category'] = blockbuster_movies_['Movie_box_office_revenue'].apply(lambda x: categorize_revenue(x, threshold))
     exploded_blockbuster_ = blockbuster_movies_.explode('genres')
 
     balanced_data_ = pd.DataFrame(columns=exploded_blockbuster_.columns)
@@ -490,3 +490,34 @@ def get_balanced_blockbuster(df, threshold):
             # Concatenate the balanced data for this genre
             balanced_data_ = pd.concat([balanced_data_, blockbuster_sample_, non_blockbuster_sample_])
     return balanced_data_
+
+def categorize_budget(budget, threshold):
+    return 'low' if budget < threshold else 'high'
+
+def get_matched_buget(df, threshold):
+    movies_without_na = df.copy().dropna(subset=['Net profit'])
+    movies_without_na['budget_category'] = movies_without_na['budget'].apply(lambda x: categorize_budget(x, threshold))
+    exploded_movies = movies_without_na.explode('genres')
+
+    balanced_data = pd.DataFrame(columns=exploded_movies.columns)
+
+    # Perform t-test for each genre
+    for genre, group in exploded_movies.groupby('genres'):
+        # Separate into low and high budget groups
+        low_budget_group = group[group['budget_category'] == 'low']
+        high_budget_group = group[group['budget_category'] == 'high']
+
+        # Determine the number of movies to sample (minimum count from low and high budget groups)
+        min_count = min(low_budget_group.shape[0], high_budget_group.shape[0])
+
+        # Sample the same number of movies from each budget category
+        low_budget_sample = low_budget_group.sample(n=min_count, random_state=42)
+        high_budget_sample = high_budget_group.sample(n=min_count, random_state=42)
+
+        # Concatenate the balanced data for this genre
+        balanced_data = pd.concat([balanced_data, low_budget_sample, high_budget_sample])
+    return balanced_data
+
+
+    
+
