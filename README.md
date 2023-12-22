@@ -43,16 +43,22 @@ Before proceeding with our analysis, we need to focus on one essential point: in
 - We visualise of the data to get insight of the data available to us (number of nan, distributions etc).
 - To complete our dataset with the TMDB one, we send a query to [Wikidata](https://query.wikidata.org/) query service to obtain a mapping from the IMDb IDs to the Freebase IDs, this is done in order to correctly merge our base CMU dataset and the TMDB dataset using both IDs as keys.
 
-### Step 2: Feasibility study
+### Step 2: Feasibility study - Milestone 2
 - For each sub-question we visualise the data related to it and assess the feasibility of the idea. we analysed sub-questions: 1) | 2) | 3) | 4) as they are the most critical regarding the data that we need to answer them.
 
-### Step 3: Analysing the data (Milestone 3)
-- Based on our feasibility study of Milestone 2 we aim to perform:
-    - Regressions
-    - Hypothesis testing (T test, Chi-squared)
-    - Correlation analysis
+### Step 3: Analysing the data - Milestone 3
 
-    and other analysis to answer our questions.
+The essential of our analysis can be found in the notebook `movie_analysis.ipynb`. Helper functions can be found in `utils.py`. Throughout this analysis, we look at movies from different angles, using a whole range of data analysis tools. We notably appeal on the following techniques:
+
+-	Random forest classifier in sub question 1)
+-	Correlation heatmap in sub question 2)
+-	NLP and sentiment analysis in sub question 3)
+-	Graph analysis in sub question 4)
+-	Linear regressions in sub question 5), 6)
+-	Statistical tests in the different sub questions
+  
+This is a non-exhaustive list of the different tools that were used throughout this analysis. We invite the reader to go through the notebook to get insight of the whole analysis.
+
 
 ## Proposed timeline
 
