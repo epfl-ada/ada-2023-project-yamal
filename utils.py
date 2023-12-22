@@ -465,28 +465,28 @@ def get_unmatched_blockbuster(movies, revenue_threshold):
     return unbalanced_data
 
 
-def get_matched_blockbuster(movies, revenue_threshold):
-    blockbuster_movies_matched = movies.copy().dropna(subset=['Movie_box_office_revenue', 'Movie_runtime'])
-    blockbuster_movies_matched['revenue_category'] = blockbuster_movies_matched['Movie_box_office_revenue'].apply(lambda x: categorize_revenue(x, revenue_threshold))
-    exploded_blockbuster_matched = blockbuster_movies_matched.explode('genres')
+def get_balanced_blockbuster(df, threshold):
+    blockbuster_movies_ = movies.copy().dropna(subset=['Movie_box_office_revenue', 'Movie_runtime'])
+    blockbuster_movies_['revenue_category'] = blockbuster_movies_['Movie_box_office_revenue'].apply(lambda x: categorize_revenue(x, revenue_threshold))
+    exploded_blockbuster_ = blockbuster_movies_.explode('genres')
 
-    balanced_data = pd.DataFrame(columns=exploded_blockbuster_matched.columns)
+    balanced_data_ = pd.DataFrame(columns=exploded_blockbuster_.columns)
 
-    for genre, group in exploded_blockbuster_matched.groupby('genres'):
+    # Perform t-test for each genre
+    for genre_, group_ in exploded_blockbuster_.groupby('genres'):
         # Separate into blockbuster and non-blockbuster groups
-        blockbuster_group = group[group['revenue_category'] == 'blockbuster']
-        non_blockbuster_group = group[group['revenue_category'] == 'non-blockbuster']
+        blockbuster_group_ = group_[group_['revenue_category'] == 'blockbuster']
+        non_blockbuster_group_ = group_[group_['revenue_category'] == 'non-blockbuster']
 
         # Determine the number of movies to sample (minimum count from blockbuster and non-blockbuster groups)
-        min_count = min(blockbuster_group.shape[0], non_blockbuster_group.shape[0])
+        min_count = min(blockbuster_group_.shape[0], non_blockbuster_group_.shape[0])
 
         # Check if there are enough movies for the t-test
         if min_count > 0:
             # Sample the same number of movies from each revenue category
-            blockbuster_sample = blockbuster_group.sample(n=min_count, random_state=42)
-            non_blockbuster_sample = non_blockbuster_group.sample(n=min_count, random_state=42)
+            blockbuster_sample_ = blockbuster_group_.sample(n=min_count, random_state=42)
+            non_blockbuster_sample_ = non_blockbuster_group_.sample(n=min_count, random_state=42)
 
             # Concatenate the balanced data for this genre
-            balanced_data = pd.concat([balanced_data, blockbuster_sample, non_blockbuster_sample])
-
-    return balanced_data
+            balanced_data_ = pd.concat([balanced_data_, blockbuster_sample_, non_blockbuster_sample_])
+    return balanced_data_
