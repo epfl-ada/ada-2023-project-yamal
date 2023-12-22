@@ -5,6 +5,9 @@ import json
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+import numpy as np
+from scipy.optimize import linear_sum_assignment
+
 
 
 def plot_nan(df, title):
@@ -395,3 +398,42 @@ def classify_plot(plot_sentence_class):
         plot_class = np.nan
         
     return plot_class
+
+def get_similarity(propensity_score1, propensity_score2):
+    '''Calculate similarity for instances with given propensity scores'''
+    return 1-np.abs(propensity_score1-propensity_score2)
+
+def perform_matching(control_study, treated_study):
+    """
+    Performs a one to one matching between control group and treatment group based on propensity scores.
+    Parameters:
+    - control_study: the dataframe representing the control group
+    - treated_study: the dataframe representing the treatment group
+    Returns :
+    - matching : the indices of the matched movies.
+    """
+    # Initialize the cost matrix with a large value for non-existing edges
+    num_control = len(control_study)
+    num_treatment = len(treated_study)
+    cost_matrix = np.full((num_control, num_treatment), np.inf)
+
+    control_matrix_index = 0
+    # Iterate through edges in NetworKit graph and fill the cost matrix
+    for control_index, control_row in control_study.iterrows():
+        treatment_matrix_index = 0
+        for treatment_index, treatment_row in treated_study.iterrows():
+            similarity = get_similarity(control_row['Propensity_score'],
+                                        treatment_row['Propensity_score'])
+            
+            # Fill the cost matrix (using negative similarity for maximization)
+            cost_matrix[control_matrix_index, treatment_matrix_index] = -similarity
+            treatment_matrix_index +=1
+        control_matrix_index +=1    
+
+    # Perform the matching using scipy.optimize.linear_sum_assignment
+    row_ind, col_ind = linear_sum_assignment(cost_matrix)
+
+    # Translate back to original DataFrame indices
+    matching = [(control_study.index[row], treated_study.index[col]) for row, col in zip(row_ind, col_ind)]
+    return matching
+
