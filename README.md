@@ -69,9 +69,9 @@ The team organisation will be set up as follows: each team member is assigned on
 
 ## Final contributions to Milestone 3
 
-- Youssef Izellalen: Analysis of subquestion 2), presentation of results on the website
-
 - Anas Hakim: Analysis of subquestion 1), presentation of results on the website
+  
+- Youssef Izellalen: Analysis of subquestion 2), presentation of results on the website
 
 - Mathieu Ruch: Analysis of subquestion 3), presentation of results on the website, readme update, setting the website
 
